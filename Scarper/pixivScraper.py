@@ -12,17 +12,16 @@ from os import path
 wdOptions = webdriver.ChromeOptions()
 wdOptions.add_argument('--ignore-certificate-errors')
 wdOptions.add_experimental_option("excludeSwitches", ["enable-logging"])
-#wdOptions.add_argument('--headless')
+wdOptions.add_argument('--headless')
 driver = webdriver.Chrome("chromedriver", options=wdOptions)
 
 cookies = pixCookies.COOKIES
 headers = pixCookies.HEADERS
-imageLimit = 3
 urlBase = "https://www.pixiv.net"
 
 #-------------------FUNCTIONS-------------------------------------------------------------------
 
-def getImageURLS():
+def getImageURLS(imageLimit=10):
     response = requests.get('https://www.pixiv.net/ranking.php', cookies=cookies, headers=headers)
     soup = BeautifulSoup(response.content, 'html.parser')
     #print(soup.prettify())
@@ -33,18 +32,13 @@ def getImageURLS():
 
 def getImages(ImagesURLS):
     for x in ImagesURLS:
-        #looks like im going to have to use selenium here to get the image url
-
-        #print(x.attrs['href'])
-
         urlSuffix = x.attrs['href']
         print(urlBase + urlSuffix)
         getImageFromURL(urlBase + urlSuffix)
-        return
+    return
        
 def getImageFromURL(URL):
-    #print("navigating to url: " + URL)
-    sleep(5)
+    sleep(3)
     driver.get(URL)
     try:
         img = WebDriverWait(driver,timeout=5).until(lambda d: d.find_element(By.CLASS_NAME,"gtm-expand-full-size-illust"))
@@ -54,7 +48,7 @@ def getImageFromURL(URL):
         print("Cannot find element" + e)
 
 
-    filepath = path.join("C:/Users/arrot/Desktop/sImages/",imgURL[-15:-1])
+    filepath = path.join("C:/Users/arrot/Desktop/sImages/",imgURL[-15:])
     imgheaders = {'referer': 'https://www.pixiv.net/en/'}
 
     img_data = requests.get(imgURL,headers=imgheaders)
@@ -62,9 +56,6 @@ def getImageFromURL(URL):
 
     with open(filepath,'wb') as handler:
         handler.write(img_data.content)
-
-    #sleep(5)
-    driver.close()
 
     return
 
@@ -98,11 +89,12 @@ def initDriver():
 
 #---------------------------------------------------------------------------------------------
 
-def main():
+def scrapeRankings(amount):
     initDriver()
-    imageURLS = getImageURLS()
+    imageURLS = getImageURLS(amount)
     getImages(imageURLS)
     print("downloads complete")
+    driver.close()
     return
 
-main()
+scrapeRankings(3)
