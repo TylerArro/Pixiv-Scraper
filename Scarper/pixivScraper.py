@@ -6,16 +6,18 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
-
+from time import sleep
+from os import path
 
 wdOptions = webdriver.ChromeOptions()
 wdOptions.add_argument('--ignore-certificate-errors')
+wdOptions.add_experimental_option("excludeSwitches", ["enable-logging"])
 #wdOptions.add_argument('--headless')
 driver = webdriver.Chrome("chromedriver", options=wdOptions)
 
 cookies = pixCookies.COOKIES
 headers = pixCookies.HEADERS
-imageLimit = 1
+imageLimit = 3
 urlBase = "https://www.pixiv.net"
 
 #-------------------FUNCTIONS-------------------------------------------------------------------
@@ -37,18 +39,34 @@ def getImages(ImagesURLS):
 
         urlSuffix = x.attrs['href']
         print(urlBase + urlSuffix)
-
-        driver.get(urlBase + urlSuffix)
-        elem = driver.find_element_by_class_name("sc-1qpw8k9-3 eFhoug gtm-expand-full-size-illust")
-        print(elem.get_attribute("href"))
+        getImageFromURL(urlBase + urlSuffix)
+        return
+       
+def getImageFromURL(URL):
+    #print("navigating to url: " + URL)
+    sleep(5)
+    driver.get(URL)
+    try:
+        img = WebDriverWait(driver,timeout=5).until(lambda d: d.find_element(By.CLASS_NAME,"gtm-expand-full-size-illust"))
+        imgURL = img.get_attribute("href")
+    except Exception as e:
         driver.close()
+        print("Cannot find element" + e)
 
-        # responseImg = requests.get(urlBase + urlSuffix, cookies=cookies, headers=imgHeaders)
-        # soupImg = BeautifulSoup(responseImg.content, 'html.parser')
-        # print(soupImg.prettify())
 
-        #imageURL = soupImg.find_all("div" , id="root")
-        #print(imageURL)
+    filepath = path.join("C:/Users/arrot/Desktop/sImages/",imgURL[-15:-1])
+    imgheaders = {'referer': 'https://www.pixiv.net/en/'}
+
+    img_data = requests.get(imgURL,headers=imgheaders)
+
+
+    with open(filepath,'wb') as handler:
+        handler.write(img_data.content)
+
+    #sleep(5)
+    driver.close()
+
+    return
 
 def initDriver():
     driver.get(urlBase)
@@ -63,7 +81,7 @@ def initDriver():
         print(e)
 
     try:
-        password = driver.find_element_by_class_name("hfoSmp")
+        password = driver.find_element(By.CLASS_NAME,"hfoSmp")
         password.clear()
         password.send_keys(pixCookies.PIXPASS)
     except Exception as e:
@@ -75,7 +93,7 @@ def initDriver():
     except Exception as e:
         driver.close()
         print(e)
-        
+
     return
 
 #---------------------------------------------------------------------------------------------
@@ -83,7 +101,8 @@ def initDriver():
 def main():
     initDriver()
     imageURLS = getImageURLS()
-    #getImages(imageURLS)
+    getImages(imageURLS)
+    print("downloads complete")
     return
 
 main()
