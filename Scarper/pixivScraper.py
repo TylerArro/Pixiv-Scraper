@@ -20,7 +20,8 @@ headers = pixCookies.HEADERS
 urlBase = "https://www.pixiv.net"
 
 #-------------------FUNCTIONS-------------------------------------------------------------------
-
+#get image html elements that contain image urls
+#parameter: amount of images to scrape
 def getImageURLS(imageLimit=10):
     response = requests.get('https://www.pixiv.net/ranking.php', cookies=cookies, headers=headers)
     soup = BeautifulSoup(response.content, 'html.parser')
@@ -30,13 +31,15 @@ def getImageURLS(imageLimit=10):
 
     return imageHTML
 
+#extract the URLs from the html elements list
 def getImages(ImagesURLS):
     for x in ImagesURLS:
         urlSuffix = x.attrs['href']
         print(urlBase + urlSuffix)
         getImageFromURL(urlBase + urlSuffix)
     return
-       
+
+# navigate the driver to pixiv illustration page, get actaul image url and download it
 def getImageFromURL(URL):
     sleep(3)
     driver.get(URL)
@@ -59,10 +62,15 @@ def getImageFromURL(URL):
 
     return
 
+#initialize selenium driver to login to pixiv 
+
 def initDriver():
+    #go to pixiv site
     driver.get(urlBase)
+    #find login button and click it
     driver.find_element(By.CLASS_NAME,'signup-form__submit--login').click()
 
+    #find username and password fields and fill them in
     try:
         username  = WebDriverWait(driver,timeout=3).until(lambda d: d.find_element(By.CLASS_NAME,"degQSE"))
         username.clear()
@@ -88,12 +96,19 @@ def initDriver():
     return
 
 #---------------------------------------------------------------------------------------------
-
+# base function to scrape rankings 
 def scrapeRankings(amount):
+    #login to pixiv with selenium driver 
     initDriver()
+
+    #get image urls from pixiv using BeautifulSoup
     imageURLS = getImageURLS(amount)
+
+    #get images from image urls
     getImages(imageURLS)
     print("downloads complete")
+
+    #close chromedriver
     driver.close()
     return
 
