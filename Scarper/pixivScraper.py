@@ -22,7 +22,7 @@ urlBase = "https://www.pixiv.net"
 #-------------------FUNCTIONS-------------------------------------------------------------------
 #get image html elements that contain image urls
 #parameter: amount of images to scrape
-def getImageURLS(imageLimit=10):
+def getRankingImageURLS(imageLimit=10):
     response = requests.get('https://www.pixiv.net/ranking.php', cookies=cookies, headers=headers)
     soup = BeautifulSoup(response.content, 'html.parser')
     #print(soup.prettify())
@@ -102,7 +102,7 @@ def scrapeRankings(amount):
     initDriver()
 
     #get image urls from pixiv using BeautifulSoup
-    imageURLS = getImageURLS(amount)
+    imageURLS = getRankingImageURLS(amount)
 
     #get images from image urls
     getImages(imageURLS)
@@ -112,4 +112,17 @@ def scrapeRankings(amount):
     driver.close()
     return
 
+def scrapeUser(amount,userID):
+    #login to pixiv with selenium driver 
+    initDriver()
+
+    #get amount image urls from pixiv user profile using pixiv ID using beatufisoup
+
+    #get images from image urls
+
+    #close chromedriver
+    driver.close()
+    return
+#---------------------------------------------------------------------------------------------
 scrapeRankings(3)
+#TODO - add a function to scrape by tag and by user
