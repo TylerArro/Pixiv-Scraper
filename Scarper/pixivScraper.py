@@ -1,4 +1,5 @@
 
+from types import NoneType
 import requests
 from bs4 import BeautifulSoup
 import pixCookies
@@ -16,6 +17,8 @@ wdOptions = webdriver.ChromeOptions()
 wdOptions.add_argument('--ignore-certificate-errors')
 wdOptions.add_experimental_option("excludeSwitches", ["enable-logging"])
 wdOptions.add_argument('--headless')
+user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+wdOptions.add_argument(f'user-agent={user_agent}')
 
 driver = webdriver.Chrome('chromedriver', options=wdOptions)
 
@@ -68,18 +71,25 @@ def getImages(ImagesUrls,rankings):
 def getImageFromURL(URL):
     sleep(3)
     driver.get(URL)
-    print(URL)
+    #print(URL)
     try:
-        img = WebDriverWait(driver,timeout=5).until(lambda d: d.find_element(By.CLASS_NAME,"gtm-expand-full-size-illust"))
+        img = WebDriverWait(driver,timeout=5).until(lambda d : d.find_element(By.CLASS_NAME,"gtm-expand-full-size-illust"))
+        #print(img.get_attribute("outerHTML"))
         imgURL = img.get_attribute("href")
-        print(imgURL)
+        if imgURL == None:
+            #print("No href found")
+            imgChild = WebDriverWait(img,timeout=5).until(lambda d : d.find_element(By.XPATH,"*"))
+            #print(imgChild.get_attribute("outerHTML"))
+            imgURL = imgChild.get_attribute("src")
+        #print(imgURL)
     except Exception as e:
         driver.close()
         print("Cannot find element")
         print(e)
 
-
-    filepath = path.join("C:/Users/arrot/Desktop/sImages/",imgURL[-15:])
+    imgID = imgURL.split("/")[-1]
+    imgID = imgID.split("_")[0]
+    filepath = path.join("C:/Users/arrot/Desktop/sImages/",imgID + ".jpg")
     imgheaders = {'referer': 'https://www.pixiv.net/en/'}
 
     img_data = requests.get(imgURL,headers=imgheaders)
@@ -128,8 +138,6 @@ def initDriver():
 #---------------------------------------------------------------------------------------------
 # base function to scrape rankings 
 def scrapeRankings(amount):
-    #login to pixiv with selenium driver 
-    initDriver()
 
     #get image urls from pixiv using BeautifulSoup
     imageURLS = getRankingImageURLS(amount)
@@ -138,13 +146,9 @@ def scrapeRankings(amount):
     getImages(imageURLS,True)
     print("downloads complete")
 
-    #close chromedriver
-    driver.close()
     return
 
 def scrapeUser(amount,userID):
-    #login to pixiv with selenium driver 
-    initDriver()
 
     #get amount image urls from pixiv user profile using pixiv ID using beatufisoup
     imageURLS = getUserImageURLS(amount,userID)
@@ -153,13 +157,15 @@ def scrapeUser(amount,userID):
     getImages(imageURLS,False)
     print("downloads complete")
 
-    #close chromedriver
-    driver.close()
     return
 #---------------------------------------------------------------------------------------------
+    #login to pixiv with selenium driver 
+initDriver()
 
-driver.quit()
 scrapeRankings(3)
-#scrapeUser(3,2356928)
+scrapeUser(3,2356928)
+
+#close chromedriver
 driver.quit()
-#TODO - add a function to scrape by tag and by user
+
+#28793893
