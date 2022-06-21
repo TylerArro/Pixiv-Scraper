@@ -131,3 +131,4 @@ dmypy.json
 pixCookies.py
 chromedriver.exe
 /sImages
+/Webapp/static

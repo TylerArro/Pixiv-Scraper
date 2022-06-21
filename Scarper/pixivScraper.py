@@ -89,7 +89,7 @@ def getImageFromURL(URL):
 
     imgID = imgURL.split("/")[-1]
     imgID = imgID.split("_")[0]
-    filepath = path.join("C:/Users/arrot/Desktop/Scraper/sImages/",imgID + ".jpg")
+    filepath = path.join("C:/Users/arrot/Desktop/Pixiv-Scraper/sImages/",imgID + ".jpg")
     imgheaders = {'referer': 'https://www.pixiv.net/en/'}
 
     img_data = requests.get(imgURL,headers=imgheaders)
