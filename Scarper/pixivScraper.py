@@ -89,7 +89,7 @@ def getImageFromURL(URL):
 
     imgID = imgURL.split("/")[-1]
     imgID = imgID.split("_")[0]
-    filepath = path.join("C:/Users/arrot/Desktop/sImages/",imgID + ".jpg")
+    filepath = path.join("C:/Users/arrot/Desktop/Scraper/sImages/",imgID + ".jpg")
     imgheaders = {'referer': 'https://www.pixiv.net/en/'}
 
     img_data = requests.get(imgURL,headers=imgheaders)
@@ -162,9 +162,9 @@ def scrapeUser(amount,userID):
     #login to pixiv with selenium driver 
 initDriver()
 
-scrapeRankings(3)
-scrapeUser(3,2356928)
-
+scrapeRankings(5)
+#scrapeUser(3,2356928)
+scrapeUser(3,28793893)
 #close chromedriver
 driver.quit()
 
