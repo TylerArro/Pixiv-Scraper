@@ -4,7 +4,15 @@
 </head>
 
 <body>
-    <h1>Pixiv {{ pixivID }}</h1>
-    <img src="{{ imgURL }}" alt="pixiv artwork id {{ artworkID }}">
+    <div>
+        <h1>Pixiv {{ pixivID }}</h1>
+        <div>
+        {% for imgs in img_list %}
+        <div>
+            <img  src= "{{ imgs.imgURL }}" alt="pixiv artwork id {{ imgs.artworkID }}">
+        </div>
+        {% endfor %}
+        </div>
+    </div>
 </body>
 </html>

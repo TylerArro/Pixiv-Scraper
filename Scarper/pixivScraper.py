@@ -16,7 +16,7 @@ from os import path
 wdOptions = webdriver.ChromeOptions()
 wdOptions.add_argument('--ignore-certificate-errors')
 wdOptions.add_experimental_option("excludeSwitches", ["enable-logging"])
-wdOptions.add_argument('--headless')
+#wdOptions.add_argument('--headless')
 user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
 wdOptions.add_argument(f'user-agent={user_agent}')
 
@@ -32,7 +32,6 @@ urlBase = "https://www.pixiv.net"
 def getRankingImageURLS(imageLimit=10):
     response = requests.get('https://www.pixiv.net/ranking.php', cookies=cookies, headers=headers)
     soup = BeautifulSoup(response.content, 'html.parser')
-    #print(soup.prettify())
 
     imageHTML = soup.find_all("a",class_="work _work",limit=imageLimit)
     return imageHTML
@@ -41,7 +40,6 @@ def getRankingImageURLS(imageLimit=10):
 def getUserImageURLS(imageLimit,userID):
     imgURLS = []
     sleep(3)
-    #print(urlBase + "/en/users/" + str(userID))
     driver.get(urlBase + "/en/users/" + str(userID))
 
     try:
@@ -71,17 +69,12 @@ def getImages(ImagesUrls,rankings):
 def getImageFromURL(URL):
     sleep(3)
     driver.get(URL)
-    #print(URL)
     try:
         img = WebDriverWait(driver,timeout=5).until(lambda d : d.find_element(By.CLASS_NAME,"gtm-expand-full-size-illust"))
-        #print(img.get_attribute("outerHTML"))
         imgURL = img.get_attribute("href")
         if imgURL == None:
-            #print("No href found")
             imgChild = WebDriverWait(img,timeout=5).until(lambda d : d.find_element(By.XPATH,"*"))
-            #print(imgChild.get_attribute("outerHTML"))
             imgURL = imgChild.get_attribute("src")
-        #print(imgURL)
     except Exception as e:
         driver.close()
         print("Cannot find element")
@@ -126,7 +119,7 @@ def initDriver():
         print(e)
 
     try:
-        driver.find_element(By.CLASS_NAME,"dMhwJU").click()
+        driver.find_element(By.CLASS_NAME,"fguACh").click()
     except Exception as e:
         driver.close()
         print(e)
@@ -162,9 +155,9 @@ def scrapeUser(amount,userID):
     #login to pixiv with selenium driver 
 initDriver()
 
-scrapeRankings(5)
+scrapeRankings(3)
 #scrapeUser(3,2356928)
-scrapeUser(3,28793893)
+#scrapeUser(3,28793893)
 #close chromedriver
 driver.quit()
 
