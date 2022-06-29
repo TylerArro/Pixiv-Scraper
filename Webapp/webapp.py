@@ -17,7 +17,12 @@ def rankings():
     imgIDs = '98962415.png'
     imgURL = 'static/rankings/' + imgIDs
     artworkID = '98962415'
-    return render_template('rankings.html',imgURL = imgURL, artworkID = artworkID)
+    img_list = []
+    imgIDs = getImglist('rankings')
+    for img in imgIDs:
+        img_list.append(pixImg('static/rankings/' + img + ".jpg", img))
+    
+    return render_template('rankings.html',img_list = img_list)
 
 @app.route('/users', methods = ['POST'])
 def users():
