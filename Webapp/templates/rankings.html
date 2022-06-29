@@ -2,6 +2,15 @@
 <head>
     <title>Rankings Images</title>
 <body>
-    <h1>Pixiv Rankings</h1>
+    <div>
+        <h1>Pixiv Rankings Images</h1>
+        <div>
+        {% for imgs in img_list %}
+        <div>
+            <img  src= "{{ imgs.imgURL }}" alt="pixiv artwork id {{ imgs.artworkID }}">
+        </div>
+        {% endfor %}
+        </div>
+    </div>
 </body>
 </html>
