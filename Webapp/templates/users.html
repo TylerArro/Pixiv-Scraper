@@ -1,5 +1,20 @@
 <html>
 <head>
+    <style>
+        div.ImageDiv {
+            position: relative;
+            display: inline-flex;
+            width: 315px;
+            height: 500px;
+            margin: 15.5px;
+        }
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>    
     <title>{{pixivID}} Images</title>
 </head>
 
@@ -8,7 +23,7 @@
         <h1>Pixiv {{ pixivID }}</h1>
         <div>
         {% for imgs in img_list %}
-        <div>
+        <div class="ImageDiv">
             <img  src= "{{ imgs.imgURL }}" alt="pixiv artwork id {{ imgs.artworkID }}">
         </div>
         {% endfor %}
