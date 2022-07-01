@@ -18,9 +18,8 @@ def rankings():
     imgIDs,noImgs = getImglist('rankings')
     for img in imgIDs:
         img_list.append(pixImg('static/rankings/' + img + ".jpg", img))
-    createZip('rankings',noImgs)
-    
-    return render_template('rankings.html',img_list = img_list)
+    zipFilePath = createZip('rankings',noImgs)
+    return render_template('rankings.html',img_list = img_list,zipFilePath = zipFilePath)
 
 @app.route('/users', methods = ['POST'])
 def users():

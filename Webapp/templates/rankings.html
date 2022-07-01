@@ -1,5 +1,6 @@
 <html>
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         div.ImageDiv {
             position: relative;
@@ -20,9 +21,12 @@
 <body>
     <div>
         <h1>Pixiv Rankings Images</h1>
-        <form class="dl" action="RankingsDownload" method="get">
-            <input type="submit" value="Download Images">
-        </form>
+        <div>
+            <a href="{{zipFilePath}}" download="sasaki">DOWNLOAD</a>
+            </a>
+        </div>
+
+
         <div>
         {% for imgs in img_list %}
             <div class="ImageDiv">
