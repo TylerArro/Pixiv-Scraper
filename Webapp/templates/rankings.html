@@ -20,11 +20,14 @@
 <body>
     <div>
         <h1>Pixiv Rankings Images</h1>
+        <form class="dl" action="RankingsDownload" method="get">
+            <input type="submit" value="Download Images">
+        </form>
         <div>
         {% for imgs in img_list %}
-        <div class="ImageDiv">
-            <img  src= "{{ imgs.imgURL }}" alt="pixiv artwork id {{ imgs.artworkID }}">
-        </div>
+            <div class="ImageDiv">
+                <img  src= "{{ imgs.imgURL }}" alt="pixiv artwork id {{ imgs.artworkID }}">
+            </div>
         {% endfor %}
         </div>
     </div>

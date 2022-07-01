@@ -9,24 +9,29 @@
             margin: 15.5px;
         }
 
-        img {
+        img.illust {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
     </style>    
-    <title>{{pixivID}} Images</title>
+    <title>User {{pixivID}} Illustrations</title>
 </head>
 
 <body>
     <div>
-        <h1>Pixiv {{ pixivID }}</h1>
-        <div>
-        {% for imgs in img_list %}
-        <div class="ImageDiv">
-            <img  src= "{{ imgs.imgURL }}" alt="pixiv artwork id {{ imgs.artworkID }}">
+        <h1>Pixiv User {{ pixivID }}</h1>
+        <div >
+            <form class="dl" action="UserDownload" method="get">
+                <input type="submit" value="Download Images">
+            </form>
         </div>
-        {% endfor %}
+        <div>
+            {% for imgs in img_list %}
+            <div class="ImageDiv">
+                <img  class="illust" src= "{{ imgs.imgURL }}" alt="pixiv artwork id {{ imgs.artworkID }}">
+            </div>
+            {% endfor %}
         </div>
     </div>
 </body>
