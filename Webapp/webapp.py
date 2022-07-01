@@ -30,6 +30,7 @@ def users():
     imgIDs,noImgs = getImglist(pixivID)
     for img in imgIDs:
         img_list.append(pixImg('static/' + pixivID + '/' + img + ".jpg", img))
+    createZip(pixivID,noImgs)
     return render_template('users.html', pixivID = pixivID,img_list = img_list)
 
 

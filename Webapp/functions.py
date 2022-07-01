@@ -18,12 +18,14 @@ def getImglist(pixivID):
     return  img_list,noImgs
 
 def createZip(pixivID,noImgs):
-
+    #Check if zip file exists if it does do nothing else
     if os.path.exists("Webapp/zips/"+ str(pixivID) + '_' + str(noImgs) + '.zip'):
         print("Updates zip file already exists")
         return
+    #delete old zip file 
     for files in glob.glob("Webapp/zips/"+ str(pixivID) + "*.zip"):
         os.remove(files)
+    #create new zip with all images
     with ZipFile( "Webapp/zips/"+ str(pixivID) + '_' + str(noImgs) + '.zip','w') as zipObj:
         for folderName,subfolders,filenames in os.walk("Webapp/static/"+ pixivID):
             for filename in filenames:
