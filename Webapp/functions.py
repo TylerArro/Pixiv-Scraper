@@ -22,6 +22,8 @@ def createZip(pixivID,noImgs):
     if os.path.exists("Webapp/zips/"+ str(pixivID) + '_' + str(noImgs) + '.zip'):
         print("Updates zip file already exists")
         return
+    for files in glob.glob("Webapp/zips/"+ str(pixivID) + "*.zip"):
+        os.remove(files)
     with ZipFile( "Webapp/zips/"+ str(pixivID) + '_' + str(noImgs) + '.zip','w') as zipObj:
         for folderName,subfolders,filenames in os.walk("Webapp/static/"+ pixivID):
             for filename in filenames:
