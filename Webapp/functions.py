@@ -1,5 +1,3 @@
-from calendar import firstweekday
-from email.mime import base
 import glob
 from zipfile import ZipFile
 import os
