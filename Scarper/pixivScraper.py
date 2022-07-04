@@ -54,19 +54,19 @@ def getUserImageURLS(imageLimit,userID):
 
     
 #extract the URLs from the html elements list
-def getImages(ImagesUrls,rankings):
+def getImages(ImagesUrls,rankings,userID):
     if rankings == True:
         for x in ImagesUrls:
             urlSuffix = x.attrs['href']
             print(urlBase + urlSuffix)
-            getImageFromURL(urlBase + urlSuffix)
+            getImageFromURL(urlBase + urlSuffix,userID)
     else:
         for url in ImagesUrls:
-            getImageFromURL(url)
+            getImageFromURL(url,userID)
     return
 
 # navigate the driver to pixiv illustration page, get actaul image url and download it
-def getImageFromURL(URL):
+def getImageFromURL(URL,userID):
     sleep(3)
     driver.get(URL)
     try:
@@ -82,7 +82,12 @@ def getImageFromURL(URL):
 
     imgID = imgURL.split("/")[-1]
     imgID = imgID.split("_")[0]
-    filepath = path.join("C:/Users/arrot/Desktop/Pixiv-Scraper/sImages/",imgID + ".jpg")
+
+    #TODO user relative paths here
+
+    if path.isdir("C:/Users/arrot/Desktop/Pixiv-Scraper/Webapp/static/",userID) == False:
+        path.mkdir("C:/Users/arrot/Desktop/Pixiv-Scraper/Webapp/static/" + userID)
+    filepath = path.join("C:/Users/arrot/Desktop/Pixiv-Scraper/Webapp/static/",userID,imgID + ".jpg")
     imgheaders = {'referer': 'https://www.pixiv.net/en/'}
 
     img_data = requests.get(imgURL,headers=imgheaders)
@@ -136,7 +141,7 @@ def scrapeRankings(amount):
     imageURLS = getRankingImageURLS(amount)
 
     #get images from image urls
-    getImages(imageURLS,True)
+    getImages(imageURLS,True,"rankings")
     print("downloads complete")
 
     return
@@ -147,7 +152,7 @@ def scrapeUser(amount,userID):
     imageURLS = getUserImageURLS(amount,userID)
     
     #get images from image urls
-    getImages(imageURLS,False)
+    getImages(imageURLS,False,userID)
     print("downloads complete")
 
     return
